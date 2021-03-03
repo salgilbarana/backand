@@ -1,0 +1,5 @@
+# config file
+/app/config
+
+# module package
+/node_modules
