@@ -3,3 +3,6 @@
 
 # module package
 /node_modules
+
+# vscode setting
+.vscode

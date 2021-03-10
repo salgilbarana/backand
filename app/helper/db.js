@@ -1,6 +1,8 @@
 const Sequelize = require('sequelize-hierarchy')();
 const fs = require('fs');
 
+const string = require('../resources/strings');
+
 const entityPath = `${__dirname}/../entity`;
 let db = null;
 let models = [];
@@ -24,12 +26,12 @@ async function initSequelize(dbConfig) {
   db.sequelize = new Sequelize(dbConfig);
   db.Op = Sequelize.Op;
 
-  // init entity
+  // entity 초기화
   Object.keys(models).forEach((modelName) => {
     db[modelName] = models[modelName](db.sequelize, Sequelize);
   });
 
-  // init associate & post constructor
+  // associate & post constructor 초기화
   Object.keys(models).forEach((modelName) => {
     const entity = db[modelName];
 
@@ -44,18 +46,18 @@ async function initSequelize(dbConfig) {
 
   await db.sequelize.sync();
 
-  // free memory
+  // memory 해제
   models = null;
 }
 
 async function checkDbHealth() {
   if (db.sequelize) {
     const getError = await db.sequelize.authenticate();
-
-    if (!getError) return DB_CONNECTED;
+    
+    if (getError === undefined) return string().DB_CONNECTED;
   }
 
-  // request new connection
+  // new connection 재요청 
   await initSequelize();
 
   return null;
