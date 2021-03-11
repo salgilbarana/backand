@@ -35,6 +35,7 @@ async function upFile(files, hostName) {
   return fileUrl;
 }
 
+// check dulicate chat room
 async function duplicateRoom(body) {
   const { host } = body;
   const { member } = body;
@@ -43,6 +44,7 @@ async function duplicateRoom(body) {
   return roomList;
 }
 
+// create new chat room
 async function createRoom(body) {
   const newRoom = await RoomRepository.createOne({
     room: body.room,
@@ -62,6 +64,7 @@ async function createRoom(body) {
   return newRoom;
 }
 
+// find room
 async function getRoom(where, attributes) {
   const data = await RoomRepository.findOne({
     where,
@@ -71,6 +74,7 @@ async function getRoom(where, attributes) {
   return data;
 }
 
+// get only chat room with other user     
 async function getRooms(where, attributes) {
   const data = await JoinRoomRepository.findAll({
     where,
@@ -93,6 +97,7 @@ async function getUser(where, attributes) {
   return userInfo;
 }
 
+// leave to chat room
 async function updateExitUser(roomIdx, params = {}) {
   const result = await JoinRoomRepository.updateJoinRoom({ is_exit: true }, {
     room_idx: roomIdx,
@@ -102,6 +107,7 @@ async function updateExitUser(roomIdx, params = {}) {
   return result;
 }
 
+// remove chat room
 async function deleteRoom(params) {
   const data = await RoomRepository.deleteOne({
     where: {

@@ -21,10 +21,12 @@ const FileRepository = new FileRepoImpl(DBClient().file);
 // const SongRepository = new SongRepoImpl(DBClient().song);
 const HighlightHistoryRepository = new HighlightHistoryRepoImpl(DBClient().highlight_history);
 
+// add highlight song
 async function addHighlight(params, files) {
   let ip;
   let file = {};
 
+  // local server ip
   Object.keys(ifaces).forEach((dev) => {
     ifaces[dev].filter((details) => {
       if (details.family === 'IPv4' && details.internal === false) {
@@ -125,6 +127,7 @@ async function addFeedbackHighlight(params, fileIdx, hostName, score) {
   return review;
 }
 
+// add review
 async function addReview(params) {
   const review = await ReviewRepository.createOne({
     parent_idx: params.parent_idx || null,
@@ -137,6 +140,7 @@ async function addReview(params) {
   return review;
 }
 
+// get all of highlight 
 async function getHighlight(where, attributes) {
   const highlight = await HighlightRepository.findAll({
     where,
@@ -146,6 +150,7 @@ async function getHighlight(where, attributes) {
   return highlight;
 }
 
+// get all of feedback for highlight 
 async function getFeedback(where, attributes) {
   const highlights = await FeedbackRepository.findAll({
     where,
@@ -155,12 +160,14 @@ async function getFeedback(where, attributes) {
   return highlights;
 }
 
+// get highlight randomly
 async function getOne(params) {
   const highlights = await HighlightRepository.findOneByPk(Number(params));
 
   return highlights;
 }
 
+// get one highlight
 async function findOne(params) {
   const highlights = await HighlightRepository.findOne(params);
 
@@ -207,6 +214,7 @@ async function getRandOne(params) {
   }
 }
 
+// find user
 async function getUser(where, attributes) {
   const userInfo = await UserRepository.findOne({
     where,
@@ -223,6 +231,7 @@ async function getUser(where, attributes) {
 //   return songInfo;
 // }
 
+// get one file
 async function getFile(where, attributes) {
   const fileInfo = await FileRepository.findOne({
     where,
@@ -231,6 +240,7 @@ async function getFile(where, attributes) {
   return fileInfo;
 }
 
+// update review
 async function updateReview(idx, params = {}) {
   const updateClause = {};
   if (params.content) {
@@ -249,6 +259,7 @@ async function updateReview(idx, params = {}) {
   return result;
 }
 
+// delete review
 async function deleteReview(idx) {
   const result = await ReviewRepository.findOneByPk(idx);
   if (!result) {
@@ -263,10 +274,7 @@ async function deleteReview(idx) {
   return result;
 }
 
-/**
- * 하이라이트 수정
- * @param {*} params
- */
+// updaet highlight
 async function updateHighlights(idx, params = {}) {
   const updateClause = {};
   if (params.user_idx) {
@@ -287,10 +295,7 @@ async function updateHighlights(idx, params = {}) {
   return result;
 }
 
-/**
- * 하이라이트 삭제
- * @param {*} params
- */
+// delete highlight
 async function deleteHighlights(params) {
   const highlight = await HighlightRepository.deleteOne({
     where: {

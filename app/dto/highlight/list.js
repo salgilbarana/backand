@@ -28,11 +28,10 @@ const schema = {
   summary: 'Get highlight',
   querystring: requestQuerySchema,
   response: {
-    // [HttpStatus.OK]: {
-    //   description: 'Successful Response',
-    //   type: 'object',
-    //   properties: {},
-    // },
+    [HttpStatus.OK]: {
+      description: 'Successful Response',
+      type: 'array',
+    },
     [HttpStatus.BAD_REQUEST]: NotFoundSchema,
     [HttpStatus.INTERNAL_SERVER_ERROR]: ErrorSchema,
   },

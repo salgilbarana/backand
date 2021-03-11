@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "amqplib": "^0.7.0",
+    "bcrypt": "^5.0.1",
     "cheerio": "^1.0.0-rc.5",
     "cors": "^2.8.5",
     "fastify": "^3.12.0",

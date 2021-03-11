@@ -19,13 +19,7 @@ const infoRoute = (fastify, opt, done) => {
             schema: DbHealth.schema,
             handler: Controller.checkDbConnection,
         },
-        // check version
-        {
-            method: 'GET',
-            url: '/app/version',
-            schema: AppVersion.schema,
-            handler: Controller.getAppVersion,
-          },
+    
     ];
     routes.forEach((route) => fastify.route(route));
     done();

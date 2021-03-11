@@ -1,12 +1,14 @@
 const Controller = require('../../controller/v1/highlight-controller');
 const { cpUpload } = require('../../helper/multer');
+const upload = require('../../dto/highlight/upload');
+const list = require('../../dto/highlight/list');
 
 module.exports = (fastify) => [
   {
     // create highlight
     method: 'POST',
     url: '/highlights',
-    schema: null,
+    schema: upload.schema,
     preHandler: cpUpload,
     handler: Controller.addHighLight,
   },
@@ -28,9 +30,8 @@ module.exports = (fastify) => [
   {
     // get all of user's highlight
     method: 'GET',
-    schema: null,
+    schema: list.schema,
     url: '/highlights/:user_idx',
-
     handler: Controller.getHighLight,
   },
   {

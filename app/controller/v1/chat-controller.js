@@ -16,7 +16,7 @@ const upFile = async (req, res) => {
 const getRooms = async (req, res) => {
   const data = [];
   const reqParams = req.params;
-
+  // get only chat room with other user
   const result = await ChatService.getRooms({ user_idx: reqParams.userIdx, is_exit: false }, ['user_idx', 'room_idx']);
   
   for (const f of result) {
@@ -37,10 +37,11 @@ const getRooms = async (req, res) => {
   res.code(HttpStatus.OK).send(data);
 };
 
+// get 1000 massege
 const getMsg = async (req, res) => {
   const reqParams = req.params;
   const msg = await req.chat.zrange(`${reqParams.room}`, 0, 99);
-
+  // change to json format
   const obj = msg.reduce((acc, cur, i) => {
     acc[i] = JSON.parse(cur);
     return acc;
@@ -49,6 +50,7 @@ const getMsg = async (req, res) => {
   res.code(HttpStatus.OK).send(Object.values(obj));
 };
 
+// leave to chat room
 const exitUser = async (req, res) => {
   const reqParams = req.params;
 
@@ -58,6 +60,7 @@ const exitUser = async (req, res) => {
   res.code(HttpStatus.OK).send(data);
 };
 
+// remove chat room
 const deleteRoom = async (req, res) => {
   const reqParams = req.params;
 

@@ -4,6 +4,7 @@ const ChatService = require('../../service/chat-service');
 const RabbitMq = require('../../helper/amqp');
 const Strings = require('../../resources/strings');
 
+// add highlight song
 const addHighLight = async (req, res) => {
   const reqBody = req.body;
   const { files } = req;
@@ -12,6 +13,7 @@ const addHighLight = async (req, res) => {
   res.code(HttpStatus.OK).send(data);
 };
 
+// add feedback
 const addFeedback = async (req, res) => {
   const reqBody = req.body;
   const { files } = req;
@@ -50,6 +52,7 @@ const addFeedback = async (req, res) => {
 
   const duplicateRoom = await ChatService.duplicateRoom(body);
 
+  // check duplicate chat room
   if (Array.isArray(duplicateRoom) && duplicateRoom.length === 0) {
     const room = `${new Date().getTime()}`;
     body.room = room;
@@ -65,8 +68,10 @@ const addFeedback = async (req, res) => {
     const highlightJson = JSON.stringify({
       nickname: `${highlighter.nickname}`, time: `${new Date().getTime()}`, message: `${msg}`,
     });
+    // store to redis
     req.chat.zadd(`${room}`, `${new Date().getTime()}`, highlightJson);
 
+    // select file type
     if (Object.keys(files).length !== 0) {
       msg = `https://${hostName}/v1/download/${feedback.file_idx}`;
       type = 'mp3';
@@ -77,10 +82,13 @@ const addFeedback = async (req, res) => {
     const reviewJson = JSON.stringify({
       nickname: `${reviewer.nickname}`, time: `${new Date().getTime() + 1}`, message: `${msg}`, type: `${type}`,
     });
+    // store to redis
     req.chat.zadd(`${room}`, `${new Date().getTime() + 1}`, reviewJson);
 
+    // get fcm token
     fcmToken = await ChatService.getUser({ idx: highlight.user_idx }, ['fcm_token']);
 
+    // Automatic room creation
     await ChatService.createRoom(body);
 
     if (fcmToken) {
@@ -98,6 +106,7 @@ const addFeedback = async (req, res) => {
   });
 };
 
+// add review
 const addReview = async (req, res) => {
   const reqBody = req.body;
 
@@ -106,6 +115,7 @@ const addReview = async (req, res) => {
   res.code(HttpStatus.OK).send({ data });
 };
 
+// get all of highlight 
 const getHighLight = async (req, res) => {
   const data = [];
   const reqParams = req.params;
@@ -134,6 +144,7 @@ const getHighLight = async (req, res) => {
   res.code(HttpStatus.OK).send({ data });
 };
 
+// get all of feedback for highlight 
 const getFeedback = async (req, res) => {
   const reqParams = req.params;
 
@@ -144,6 +155,7 @@ const getFeedback = async (req, res) => {
   res.code(HttpStatus.OK).send(data);
 };
 
+// get highlight randomly
 const getRandom = async (req, res) => {
   const reqParams = req.params;
   const hostName = req.hostname;
@@ -160,24 +172,28 @@ const getRandom = async (req, res) => {
   res.code(HttpStatus.OK).send({ data });
 };
 
+// update review
 const updateReview = async (req, res) => {
   const data = await HighLightService.updateReview(req.params.idx, req.body);
 
   res.code(HttpStatus.OK).send(data);
 };
 
+// update highlight
 const updateHighLights = async (req, res) => {
   const data = await HighLightService.updateHighlights(req.params.idx, req.body);
 
   res.code(HttpStatus.OK).send(data);
 };
 
+// delete review
 const deleteReview = async (req, res) => {
   const data = await HighLightService.deleteReview(req.params.idx);
 
   res.code(HttpStatus.OK).send(data);
 };
 
+// delete highlight
 const deleteHighLight = async (req, res) => {
   const reqParams = req.params;
 
@@ -186,6 +202,7 @@ const deleteHighLight = async (req, res) => {
   res.code(HttpStatus.OK).send({ data });
 };
 
+// Bring up to 10th
 const getHighlightRanks = async (req, res) => {
   const hostName = req.hostname;
   const reqParams = req.params;
